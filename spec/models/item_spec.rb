@@ -68,6 +68,23 @@ describe Item do
         Item.new(:start => @start - 2.minutes, :end => @start).valid?.should be_true
       end
       
+      context "on update" do
+        it "should valid " do
+          Item.create(:start => @start, :end => @start + 2.minutes)
+          i = Item.create(:start => @start + 2.minutes , :end => @start + 4.minutes)
+          i.update_attributes :start => @start + 3.minutes
+          i.should be_valid
+        end
+        
+        it "should NOT valid " do
+          Item.create(:start => @start, :end => @start + 2.minutes)
+          i = Item.create(:start => @start + 2.minutes , :end => @start + 4.minutes)
+          i.update_attributes :start => @start + 1.minutes
+          i.should_not be_valid
+        end
+        
+        
+      end      
     end
   end
 
