@@ -1,8 +1,7 @@
 class Item < ActiveRecord::Base
   
   validates_presence_of :start, :end
-  
-  
+
   def validate_on_create
     return unless self.start || self.end
     if self.start > self.end  
@@ -11,7 +10,7 @@ class Item < ActiveRecord::Base
       errors.add(:intersection, 'intersect!!!') if 
       Item.find :first, :conditions => 
       [
-        "(start < :start and end > :start) OR (start < :end and end > :end) OR (start > :start and end < :end)", 
+        "start < :end and end > :start", 
         { :start => self.start, :end => self.end }
       ]
     end
@@ -25,7 +24,7 @@ class Item < ActiveRecord::Base
       errors.add(:intersection, 'intersect!!!') if 
       Item.find :first, :conditions => 
       [
-        "((start < :start and end > :start) OR (start < :end and end > :end) OR (start > :start and end < :end)) AND id <> :id", 
+        "(start < :end and end > :start) AND id <> :id", 
         { :start => self.start, :end => self.end, :id => self.id }
       ]
     end
